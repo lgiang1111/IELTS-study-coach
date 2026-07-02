@@ -57,3 +57,12 @@
   - Revamped Streamlit trace log visualizer to reverse line order (newest first) and parse `\n` to `<br/>` for correct wrapping and styled highlight coloring.
 - **Performed by**: Antigravity (AI Coding Assistant).
 
+## 2026-07-02 (Session 7)
+- **Activity**: Fixed CLI unit testing and successfully initialized Git repository with remote push to GitHub.
+- **Key Achievements**:
+  - Resolved blocking pytest execution issue in `tests/test_cli.py` by mocking the Rich console inputs, making the test suite completely green and fast (< 1s).
+  - Initialized Git workspace, created a clean `.gitignore` (excluding caches, venv, and logs), staged all project resources, and created the initial semantic commit.
+  - Successfully connected local codebase to the remote GitHub repository at `git@github.com:lgiang1111/IELTS-study-coach.git` and pushed to the `main` branch.
+- **Performed by**: Antigravity (AI Coding Assistant).
+
+
