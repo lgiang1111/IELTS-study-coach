@@ -82,33 +82,33 @@ where $s \in \{\text{Listening}, \text{Reading}, \text{Writing}, \text{Speaking}
 
 We model skill acquisition as an exponential saturation process, representing diminishing returns at higher proficiency levels:
 
-$$P_s(t_s) = 9.0 - (9.0 - P_{s,0}) \cdot e^{-k_s \cdot t_s}$$
+$$P\_s(t\_s) = 9.0 - (9.0 - P\_{s,0}) \cdot e^{-k\_s \cdot t\_s}$$
 
-where $P_s(t_s)$ is the predicted score after $t_s$ total hours, $P_{s,0}$ is the baseline score, and $k_s$ is the skill-specific learning rate calibrated to reflect pedagogical difficulty: $k_{\text{Listening}} = 0.006$, $k_{\text{Reading}} = 0.005$, $k_{\text{Speaking}} = 0.004$, and $k_{\text{Writing}} = 0.003$.
+where $P\_s(t\_s)$ is the predicted score after $t\_s$ total hours, $P\_{s,0}$ is the baseline score, and $k\_s$ is the skill-specific learning rate calibrated to reflect pedagogical difficulty: $k\_{\text{Listening}} = 0.006$, $k\_{\text{Reading}} = 0.005$, $k\_{\text{Speaking}} = 0.004$, and $k\_{\text{Writing}} = 0.003$.
 
 ### 3.3 Cognitive Fatigue Model
 
-Daily cognitive fatigue $F_d$ is a power-law function of study duration, offset by a variety reward $\beta = 0.2$ for alternating skills to model task-switching recovery:
+Daily cognitive fatigue $F\_d$ is a power-law function of study duration, offset by a variety reward $\beta = 0.2$ for alternating skills to model task-switching recovery:
 
-$$F_d = \sum_{j=1}^{m} (C_{\text{diff}} \cdot t_j^{1.3}) - 0.2 \cdot \sum_{j=2}^{m} \mathbb{1}[s_j \neq s_{j-1}]$$
+$$F\_d = \sum\_{j=1}^{m} (C\_{\text{diff}} \cdot t\_j^{1.3}) - 0.2 \cdot \sum\_{j=2}^{m} \mathbb{1}[s\_j \neq s\_{j-1}]$$
 
-where $m$ is the number of blocks on day $d$, $t_j$ is the duration of block $j$, and $C_{\text{diff}}$ is the skill difficulty coefficient ($C_{\text{Listening}} = 1.2$, $C_{\text{Reading}} = 1.3$, $C_{\text{Speaking}} = 1.4$, $C_{\text{Writing}} = 1.5$).
+where $m$ is the number of blocks on day $d$, $t\_j$ is the duration of block $j$, and $C\_{\text{diff}}$ is the skill difficulty coefficient ($C\_{\text{Listening}} = 1.2$, $C\_{\text{Reading}} = 1.3$, $C\_{\text{Speaking}} = 1.4$, $C\_{\text{Writing}} = 1.5$).
 
 ### 3.4 Multi-Objective Fitness Function
 
 The GA optimizes a multi-objective fitness function containing fatigue and constraint penalties:
 
-$$\text{Fitness} = \sum_{s \in \{L,R,W,S\}} P_s(t_s) - w_f \cdot \sum_{d=1}^{7} F_d - \sum_{c} \text{Penalty}_c$$
+$$\text{Fitness} = \sum\_{s \in \{L,R,W,S\}} P\_s(t\_s) - w\_f \cdot \sum\_{d=1}^{7} F\_d - \sum\_{c} \text{Penalty}\_c$$
 
-where $w_f$ scales the fatigue penalty, and $\text{Penalty}_c$ represents quadratic penalties for violating constraints (max 4 blocks/day, max 24 blocks/week, min 4 blocks/skill/week for balance).
+where $w\_f$ scales the fatigue penalty, and $\text{Penalty}\_c$ represents quadratic penalties for violating constraints (max 4 blocks/day, max 24 blocks/week, min 4 blocks/skill/week for balance).
 
 ### 3.5 Pre-computation Feasibility Validation
 
-To prevent token waste, target feasibility is validated by inverting the learning curve equation to solve for the required study time ($T_{\text{req}}$):
+To prevent token waste, target feasibility is validated by inverting the learning curve equation to solve for the required study time ($T\_{\text{req}}$):
 
-$$T_{\text{req}} = \sum_{s \in \{L,R,W,S\}} \frac{1}{k_s} \ln\left(\frac{9.0 - P_{s,0}}{9.0 - \min(P_{s,\text{target}}, 8.9)}\right)$$
+$$T\_{\text{req}} = \sum\_{s \in \{L,R,W,S\}} \frac{1}{k\_s} \ln\left(\frac{9.0 - P\_{s,0}}{9.0 - \min(P\_{s,\text{target}}, 8.9)}\right)$$
 
-If $T_{\text{req}}$ exceeds available hours ($T_{\text{avail}} = \min(48, 7 \cdot H_{\text{max}}) \cdot \frac{D}{7}$, where $H_{\text{max}}$ is the daily limit and $D$ is preparation days), the pipeline halts and suggests mathematical adjustments, bypassing downstream models.
+If $T\_{\text{req}}$ exceeds available hours ($T\_{\text{avail}} = \min(48, 7 \cdot H\_{\text{max}}) \cdot \frac{D}{7}$, where $H\_{\text{max}}$ is the daily limit and $D$ is preparation days), the pipeline halts and suggests mathematical adjustments, bypassing downstream models.
 
 ---
 
